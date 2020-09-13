@@ -1,5 +1,7 @@
 import React from 'react';
-import {Card, CardImg,CardImgOverlay,CardText,CardBody,CardTitle } from 'reactstrap';
+import {Card, CardImg,CardImgOverlay,CardText,CardBody,CardTitle,Breadcrumb,BreadcrumbItem } from 'reactstrap';
+import {Link} from 'react-router-dom';
+
 
 
 
@@ -22,43 +24,55 @@ import {Card, CardImg,CardImgOverlay,CardText,CardBody,CardTitle } from 'reactst
         }
     }
 
-   function RenderComments({dish}){
-        if(dish!=null){
-            return(
-                <div className="container">
-                    <h4>Comments</h4>
-                    <div>
-                        {dish.comments.map((comment)=>{
-                return(
-                    <div key={comment.id}>
-                    <div>{comment.comment}</div>
-                     <div>--{comment.author}, {new Intl.DateTimeFormat('en-US', {year:'numeric',month:'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}
-                     </div>
+    function RenderComments({ comments }) {
+        if (!comments || comments.length === 0) {
+          return (
+            <div></div>
+          );
+        } else {
+            const c = comments.map((comment) => {
+                return (
+                  <div key={comment.id}>
+                    <li>{comment.comment}</li>
+                    <li>-- {comment.author}, {new Intl.DateTimeFormat('en-US', {year:'numeric',month:'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}</li>
                     </div>
-                )
-            })}
-              </div>
+                );
+              });
+          return (
+            <div className="col-12 col-md-5 m-1">
+              <h4>Comments</h4>
+              {console.log(comments)}
+              <ul className="list-unstyled">
+                  {c}
+              </ul>
              </div>
-            );
+          );
         }
-        else{
-            return(
-                <div></div>
-            )
-        }
-    }
+      }
 
     const DishDetail = (props) => {
          
         return(
             <div className="container">
                 <div className="row">
-                    <div className="col-12 col-md-5 m-1">
-                     <RenderDish dish={props.dish} />
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <Link to="/menu">Menu</Link>
+                        </BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr/>
                     </div>
-                    <div className="col-12 col-md-5 m-1">
-                      <RenderComments dish={props.dish}/>
-                    </div>
+                </div>
+                <div className="row">
+                        <div className="col-12 col-md-5 m-1">
+                        <RenderDish dish={props.dish} />
+                        </div>
+                        <div className="col-12 col-md-5 m-1">
+                        <RenderComments comments={props.allComments}/>
+                        </div>
                 </div>
             </div>
 
